@@ -1,3 +1,3 @@
-export * from "./user_model"
-export * from "./quiz_model"
-export * from "./quiz_result_model"
+export * from "./user.model"
+export * from "./quiz.model"
+export * from "./quiz.result.model"
