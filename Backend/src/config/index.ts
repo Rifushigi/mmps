@@ -1,3 +1,3 @@
-export * from "./app_config"
-export * from "./database_config"
-export * from "./constants_config"
+export * from "./database.config"
+export * from "./constants.config"
+export * from "./cors.config"
