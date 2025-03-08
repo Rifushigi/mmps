@@ -3,7 +3,7 @@ import { User } from "../models";
 import { ApiResponse, IUser, RequestWithUser } from "../interfaces";
 import { asyncErrorHandler, NotFoundError, UnauthorisedError } from "../middlewares"
 
-export class UserController {
+class UserController {
     //TODO
     // public async createUser(req: Request, res: Response, next: NextFunction) {
     //     try {
@@ -133,3 +133,5 @@ export class UserController {
         res.json(response);
     });
 }
+
+export default UserControler;
