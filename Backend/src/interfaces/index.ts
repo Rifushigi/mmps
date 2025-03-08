@@ -73,7 +73,7 @@ export interface IUserModel extends Model<IUserDocument> {
 /**
  * Defines the api response structure
  */
-export interface ApiResponse{
+export interface ApiResponse {
     status: boolean;
     message: string;
     data?: any;
