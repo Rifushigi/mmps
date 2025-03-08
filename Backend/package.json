@@ -44,5 +44,13 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "morgan": "^1.10.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tensorflow/tfjs-node",
+      "bcrypt",
+      "canvas",
+      "core-js"
+    ]
   }
 }
