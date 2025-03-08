@@ -1,2 +1,2 @@
-export * from "./hashing_utils";
-export * from "./validation_utils";
+export * from "./hashing.utils";
+export * from "./validation.utils";
