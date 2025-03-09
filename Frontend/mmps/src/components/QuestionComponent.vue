@@ -1,6 +1,6 @@
 <template>
   <div
-    class="question-container mx-auto rounded-md shadow-md bg-white p-6 mb-4 w-full max-w-md sm:max-w-lg h-full"
+    class="question-container mx-auto rounded-md shadow-md bg-white p-6 mb-4 w-full min-w-md sm:max-w-lg h-full"
   >
     <h1 class="question text-2xl font-semibold text-gray-800 mb-4">
       {{ question.text }}
@@ -64,12 +64,16 @@ const selectOption = (id, isCorrect) => {
 }
 
 .selected {
-  background-color: #90cdf4; /* Example background color for selected option */
-  border-color: #4299e1; /* Example border color for selected option */
-  color: #2b6cb0; /* Example text color for selected option */
+  background-color: #90cdf4; 
+  border-color: #4299e1; 
+  color: #2b6cb0; 
 }
 
 .shadow-md {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.min-w-md {
+  min-width: 28rem;
 }
 </style>
