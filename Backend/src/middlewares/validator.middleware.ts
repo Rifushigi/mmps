@@ -1,14 +1,19 @@
-import Joi from "joi";
+import { ObjectSchema, ArraySchema } from "joi";
 import { Request, Response, NextFunction } from "express";
+import { asyncErrorHandler, ValidationError } from "./err.handler.middleware";
+import Joi from "joi";
 
-export const validator = (schema: Joi.ObjectSchema | Joi.ArraySchema) =>
-    async (req: Request, res: Response, next: NextFunction) => {
+export const validate = (schema: ObjectSchema | ArraySchema) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { body } = req;
-            const value = await schema.validateAsync(body);
+            await schema.validateAsync(req.body);
             next();
         } catch (error) {
-            res.status(400)
-            next(error)
+            if (error instanceof Joi.ValidationError) {
+                next(new ValidationError(error.details[0].message));
+            } else {
+                next(error);
+            }
         }
-    };
+    }
+};
