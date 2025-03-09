@@ -81,9 +81,9 @@ let faceCaptureInterval = null
 let faceCaptureTimeout = null
 
 const loadModels = async () => {
-  await faceapi.nets.ssdMobilenetv1.loadFromUri('http://localhost:8900/models')
-  await faceapi.nets.faceLandmark68Net.loadFromUri('http://localhost:8900/models')
-  await faceapi.nets.faceRecognitionNet.loadFromUri('http://localhost:8900/models')
+  await faceapi.nets.ssdMobilenetv1.loadFromUri('http://localhost:1234/models')
+  await faceapi.nets.faceLandmark68Net.loadFromUri('http://localhost:1234/models')
+  await faceapi.nets.faceRecognitionNet.loadFromUri('http://localhost:1234/models')
 }
 
 const startVideo = async () => {
