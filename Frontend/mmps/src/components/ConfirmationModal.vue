@@ -27,4 +27,40 @@ defineProps({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.bg-gray-300 {
+  background-color: #e2e8f0;
+}
+
+.bg-gray-400 {
+  background-color: #cbd5e0;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-600 {
+  background-color: #2b6cb0;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+</style>
