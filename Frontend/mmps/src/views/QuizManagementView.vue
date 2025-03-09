@@ -1,10 +1,10 @@
 <template>
   <div
-    class="bg-slate-800 flex flex-col justify-start items-center pb-10 h-dvh overflow-y-auto w-screen"
+    class="bg-gray-100 flex flex-col justify-start items-center pb-10 h-dvh overflow-y-auto w-screen"
   >
     <AdminHeader />
     <div class="flex flex-col items-center h-full w-full px-14">
-      <h1 class="text-3xl font-bold text-gray-300 mb-8 mt-4">Quiz Management</h1>
+      <h1 class="text-3xl font-bold text-gray-800 mb-8 mt-4">Quiz Management</h1>
 
       <!-- Search Input -->
       <div class="flex mb-4 justify-between space-x-8">
@@ -12,7 +12,7 @@
           v-model="searchQuery"
           type="text"
           placeholder="Search by title"
-          class="p-2 rounded bg-gray-700 text-gray-300 border border-gray-500"
+          class="p-2 rounded bg-white text-gray-800 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
         />
 
         <button
@@ -30,6 +30,7 @@
             :key="quiz.id"
             :quiz="quiz"
             @quizSelected="onSelectQuiz"
+            class="bg-white shadow-md rounded p-4 transition-transform transform hover:translate-y-[-4px]"
           />
         </div>
       </div>
@@ -64,7 +65,7 @@ const onSelectQuiz = (quiz) => {
 
 const fetchQuizzes = async () => {
   const response = await axiosInstance.get('/quiz')
-  quizzes.value = response.data
+  quizzes.value = response.data.data
 }
 
 onMounted(fetchQuizzes)
@@ -81,9 +82,9 @@ const handleQuizCreated = async (newQuiz) => {
   try {
     console.log(newQuiz)
     const response = await axiosInstance.post('/quiz', newQuiz)
-    if (response.data) {
+    if (response.data.data) {
       // Assuming the API returns the created quiz
-      quizzes.value.push(response.data)
+      quizzes.value.push(response.data.data)
       showCreateModal.value = false
     } else {
       console.error('Quiz creation response did not contain quiz data')
@@ -102,3 +103,65 @@ const filteredQuizzes = computed(() => {
   )
 })
 </script>
+
+<style scoped>
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.border-gray-300 {
+  border-color: #e2e8f0;
+}
+
+.bg-blue-600 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.focus\:ring-blue-500:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
+
+.focus\:border-blue-500:focus {
+  border-color: #3182ce;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.transition-transform {
+  transition: transform 0.2s;
+}
+
+.transform {
+  transform: translateY(0);
+}
+
+.hover\:translate-y-\[-4px\]:hover {
+  transform: translateY(-4px);
+}
+</style>
