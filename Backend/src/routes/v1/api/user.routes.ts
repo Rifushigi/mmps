@@ -2,39 +2,23 @@
 import { Router } from "express";
 import user from "../../../controllers/user.controller";
 import { updateUserSchema } from "../../../validators";
-import { validator, authenticateToken, isAdmin } from "../../../middlewares";
+import { validate, authenticateToken, isAdmin } from "../../../middlewares";
 
 const userRouter: Router = Router();
 
 // Get total number of admin users
-userRouter.get(
-    "/total",
-    user.getTotalUsers
-)
+userRouter.get("/total", user.getTotalUsers)
 
 // Get all users (Admin only)
-userRouter.get(
-    "/all",
-    user.getAllUsers
-);
+userRouter.get("/all", user.getAllUsers);
 
 // Get a specific user by ID (Admin only)
-userRouter.get(
-    "/:id",
-    user.getUserById
-);
+userRouter.get("/:id", user.getUserById);
 
 // Update a user by ID (Admin or self)
-userRouter.patch(
-    "/:id",
-    validator(updateUserSchema),
-    user.updateUser
-);
+userRouter.patch("/:id", validate(updateUserSchema), user.updateUser);
 
 // Delete a user by ID (Admin only)
-userRouter.delete(
-    "/:id",
-    user.deleteUser
-);
+userRouter.delete("/:id", user.deleteUser);
 
 export default userRouter;
