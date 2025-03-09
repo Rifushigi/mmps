@@ -13,20 +13,25 @@ class AuthController {
     static signup = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
         const expectedDescriptorLength = 128;
         const { name, email, password, faceDescriptors } = req.body;
+
         if (!name || !email || !password || !faceDescriptors) {
             throw new ValidationError("All fields are required");
         }
+
         if (password.length < 8) {
             throw new ValidationError("Password must be at least 8 characters long");
         }
+
         if (faceDescriptors.length !== expectedDescriptorLength) {
             throw new ValidationError("Face descriptor length mismatch");
         }
+
         // Check if a user with the same email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             throw new ConflictError("User with this email already exists");
         }
+
         // Check for unique face descriptor
         const users = await User.find({});
         for (const user of users) {
@@ -43,6 +48,7 @@ class AuthController {
                 throw new ConflictError("Face descriptor already exists for another user");
             }
         }
+
         const hashedPassword: string = hashPassword(password);
         // Create a new user object with hashed password and other fields
         const newUser = {
@@ -163,10 +169,12 @@ class AuthController {
                 new: true,
             }
         );
+
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: true,
         });
+        
         const response: ApiResponse = {
             status: true,
             message: "Successfully logged out user"
