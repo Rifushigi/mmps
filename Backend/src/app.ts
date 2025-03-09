@@ -20,7 +20,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 // Serve face-api.js models
-app.use('/models', express.static(path.join(__dirname, '../public/models')))
+app.use('/models', express.static(path.join(__dirname, '/public/models')))
 app.use("/v1", allRoutes);
 app.use(notFound);
 app.use(globalErrorHandler);
