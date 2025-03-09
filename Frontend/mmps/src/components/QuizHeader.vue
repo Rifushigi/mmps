@@ -7,7 +7,7 @@
       </div>
       <div class="bar w-64 h-6 bg-gray-200 rounded-full">
         <div
-          class="completion h-full bg-slate-600 rounded-full"
+          class="completion h-full bg-blue-500 rounded-full"
           :style="{ width: barPercentage }"
         ></div>
       </div>
@@ -53,5 +53,29 @@ function formatTimeTaken(seconds) {
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.bg-gray-200 {
+  background-color: #edf2f7;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
