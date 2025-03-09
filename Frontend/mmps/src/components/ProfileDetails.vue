@@ -11,19 +11,19 @@
           disabled
           v-model="name"
           type="text"
-          class="w-full p-2 border-4 rounded-lg border-gray-300 focus:outline-none ring-gray-300"
+          class="w-full p-2 border-2 rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
         />
       </div>
 
       <div class="flex-row flex justify-center items-center">
-        <label class=" w-1/4 text-gray-700 font-semibold mb-2 mr-2 text-center"
+        <label class="w-1/4 text-gray-700 font-semibold mb-2 mr-2 text-center"
           >Email <span class="text-red-600">*</span></label
         >
         <input
           disabled
           v-model="email"
           type="text"
-          class="w-full p-2 border-4 rounded-lg border-gray-300 focus:outline-none ring-gray-300"
+          class="w-full p-2 border-2 rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
         />
       </div>
 
@@ -35,7 +35,7 @@
           v-model="phoneNumber"
           disabled
           type="text"
-          class="w-full p-2 border-4 rounded-lg border-gray-300 focus:outline-none ring-gray-300"
+          class="w-full p-2 border-2 rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
         />
       </div> -->
     </div>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -72,5 +72,27 @@ const email = computed(() => store.getters.user.email)
 </script>
 
 <style scoped>
-/* custom styles */
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.text-gray-900 {
+  color: #1a202c;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
 </style>
