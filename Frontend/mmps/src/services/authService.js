@@ -9,7 +9,7 @@ const login = async (email, password) => {
 
 const signup = async (email, password, name) => {
     const response = await axiosInstance.post(`/auth/signup`, { email, password, name })
-    return response.data.data;
+    return response.data;
 }
 
 const validateFace = async (faceDescriptors, email) => {
@@ -17,7 +17,7 @@ const validateFace = async (faceDescriptors, email) => {
         email,
         faceDescriptors
     })
-    return response.data.data;
+    return response.data;
 }
 
 export default {
