@@ -72,7 +72,7 @@ const selectedOptions = reactive([])
 const fetchQuizzes = async () => {
   try {
     const response = await axiosInstance.get('/quiz')
-    quizes.value = response.data
+    quizes.value = response.data.data
     quiz.value = quizes.value.find((q) => q.id == quizId.value)
     if (quiz.value) {
       originalDuration.value = quiz.value.duration * 60
@@ -239,3 +239,33 @@ onBeforeUnmount(() => {
   clearInterval(timerInterval)
 })
 </script>
+
+<style scoped>
+.bg-slate-800 {
+  background-color: #2d3748;
+}
+
+.text-gray-300 {
+  color: #e2e8f0;
+}
+
+.bg-blue-600 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+</style>
