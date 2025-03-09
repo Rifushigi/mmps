@@ -1,25 +1,14 @@
 //Under development
 import { User } from "../models";
 import { NextFunction, Request, Response } from "express";
-import {
-    generateAccessToken,
-    generateRefreshToken,
-    hashPassword,
-    refreshAccessToken,
-} from "../utils";
+import { generateAccessToken, generateRefreshToken, hashPassword, refreshAccessToken } from "../utils";
 import * as faceapi from 'face-api.js';
-import {
-    asyncErrorHandler,
-    AuthenticationError,
-    ConflictError,
-    NotFoundError,
-    ValidationError
-} from "../middlewares";
+import { asyncErrorHandler, AuthenticationError, ConflictError, NotFoundError, ValidationError } from "../middlewares";
 import { ApiResponse } from "../interfaces";
 import { refreshCookieConfig } from "../config/security.config";
 
 // TODO
-export class AuthController {
+class AuthController {
 
     static signup = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
         const expectedDescriptorLength = 128;
@@ -186,7 +175,7 @@ export class AuthController {
         return res.json(response);
     });
 
-    static validateFace = asyncErrorHandler(async(req: Request, res: Response, next: NextFunction) => {
+    static validateFace = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
         const { email, faceDescriptors } = req.body;
         //TODO
         // Log input for debugging
@@ -231,3 +220,5 @@ export class AuthController {
         }
     });
 }
+
+export default AuthController;
