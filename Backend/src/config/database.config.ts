@@ -1,8 +1,8 @@
 import mongoose, { connect } from "mongoose";
-import { localUrl, nodeEnv, webUrl } from "./constants.config";
+import { localUrl, env, webUrl } from "./constants.config";
 
 function selectDB() {
-    if (nodeEnv !== "production")
+    if (env !== "production")
         return { url: localUrl };
 
     return {
