@@ -84,5 +84,7 @@ export const globalErrorHandler = (err: Error, _req: Request, res: Response, nex
 }
 
 export const asyncErrorHandler = (func: (req: Request, res: Response, next: NextFunction) => Promise<any>) => {
-    (req: Request, res: Response, next: NextFunction) => Promise.resolve(func(req, res, next)).catch(next);
+    return (req: Request, res: Response, next: NextFunction) => {
+        return Promise.resolve(func(req, res, next)).catch(next)
+    };
 }
