@@ -10,10 +10,11 @@
             v-for="(_, index) in props.questions"
             :key="index"
             :class="[
-              'mb-2 p-2 rounded cursor-pointer bg-gray-300 text-gray-700 hover:bg-gray-200 ring-slate-500',
+              'mb-2 p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-200 ring-slate-500',
               {
                 'bg-blue-200': index === currentQuestionIndex,
-                'bg-green-200': answeredQuestions.includes(index)
+                'bg-green-200': answeredQuestions.includes(index),
+                'bg-gray-300': index !== currentQuestionIndex && !answeredQuestions.includes(index)
               }
             ]"
             @click="navigateToQuestion(index)"
@@ -47,3 +48,45 @@ const navigateToQuestion = (index) => {
   emit('navigateToQuestion', index)
 }
 </script>
+
+<style scoped>
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.bg-gray-200 {
+  background-color: #edf2f7;
+}
+
+.bg-gray-300 {
+  background-color: #e2e8f0;
+}
+
+.bg-blue-200 {
+  background-color: #90cdf4;
+}
+
+.bg-green-200 {
+  background-color: #c6f6d5;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-600 {
+  background-color: #2b6cb0;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
