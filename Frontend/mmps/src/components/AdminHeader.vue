@@ -1,6 +1,6 @@
 <template>
-  <header class="w-full bg-gray-900 p-4 flex items-center justify-between">
-    <h1 class="text-3xl font-bold text-gray-300">Admin Dashboard</h1>
+  <header class="w-full bg-white p-4 flex items-center justify-between shadow-md">
+    <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
     <nav>
       <ul class="flex space-x-4">
         <li>
@@ -129,9 +129,25 @@ const isActive = (path) => {
 </script>
 
 <style scoped>
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
 .nav-link {
   position: relative;
-  @apply text-gray-300 text-lg hover:text-white px-4 py-2 rounded-full transition-all duration-200;
+  @apply text-gray-700 text-lg hover:text-blue-500 px-4 py-2 rounded-full transition-all duration-200;
 }
 
 .nav-link::after {
@@ -141,7 +157,7 @@ const isActive = (path) => {
   bottom: -1px;
   width: 0;
   height: 3px;
-  background-color: white;
+  background-color: #3182ce;
   transition: width 0.3s ease-in-out;
 }
 
@@ -151,6 +167,18 @@ const isActive = (path) => {
 
 .active-link::after {
   width: 100%;
-  background-color: white;
+  background-color: #3182ce;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
