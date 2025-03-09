@@ -2,14 +2,19 @@
 <template>
   <div
     @click="selectQuiz"
-    :class="{ 'card-taken': quiz.taken && !store.getters.isAdmin, 'card-available': !quiz.taken || store.getters.isAdmin }"
-    class="bg-gray-700 text-gray-300 p-4 rounded-lg hover:bg-gray-600 cursor-pointer transition-all duration-200"
+    :class="{
+      'card-taken': quiz.taken && !store.getters.isAdmin,
+      'card-available': !quiz.taken || store.getters.isAdmin
+    }"
+    class="bg-white text-gray-800 p-4 rounded-lg hover:bg-blue-100 cursor-pointer transition-all duration-200 shadow-md"
   >
     <h3 class="text-lg font-bold mb-2">{{ quiz.name }}</h3>
     <p class="text-sm">Questions: {{ quiz.questions.length }}</p>
     <p class="text-sm">Time: {{ quiz.duration }} Minutes</p>
     <p v-if="isAdmin" class="text-sm">Created at: {{ formatDate(quiz.dateCreated) }}</p>
-    <div v-if="quiz.taken && !store.getters.isAdmin" class="text-red-400 text-sm">Already taken</div>
+    <div v-if="quiz.taken && !store.getters.isAdmin" class="text-red-400 text-sm">
+      Already taken
+    </div>
   </div>
 </template>
 
@@ -32,7 +37,7 @@ const selectQuiz = () => {
   console.log(props.quiz.taken)
   if (!props.quiz.taken || store.getters.isAdmin) {
     emit('quizSelected', quizId, props.quiz.duration)
-  } 
+  }
 }
 
 const formatDate = (dateString) => {
@@ -40,20 +45,38 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options)
 }
 </script>
+
 <style scoped>
 .card-taken {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.taken-label {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: #721c24;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+.card-available:hover {
+  background-color: #ebf8ff; /* Light blue background on hover */
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-red-400 {
+  color: #fc8181;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.hover\:bg-blue-100:hover {
+  background-color: #ebf8ff;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
