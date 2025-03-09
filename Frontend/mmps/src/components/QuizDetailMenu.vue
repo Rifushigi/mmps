@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-[200px] w-[500px] lg:w-1/3 mr-4 h-60 bg-gray-800 rounded-l-lg p-4">
+  <div class="min-w-[200px] w-[500px] lg:w-1/3 mr-4 h-60 bg-white rounded-l-lg p-4 shadow-md">
     <ul>
       <li
         @click="setCurrentTab('details')"
@@ -41,7 +41,7 @@ const setCurrentTab = (tab) => {
 <style scoped>
 .nav-link {
   position: relative;
-  @apply text-gray-300 text-lg hover:text-white px-4 py-2 rounded-full transition-all duration-200;
+  @apply text-gray-700 text-lg hover:text-blue-500 px-4 py-2 rounded-full transition-all duration-200;
 }
 
 .nav-link::after {
@@ -51,16 +51,28 @@ const setCurrentTab = (tab) => {
   bottom: -1px;
   width: 0px;
   height: 4px;
-  background-color: white;
+  background-color: #3182ce;
   transition: width 0.3s ease-in-out;
 }
 
-/* .nav-link:hover::after {
-  width: 70%;
-} */
+.nav-link:hover::after {
+  width: 100%;
+}
 
 .active-link::after {
-  width: 65%;
-  background-color: white;
+  width: 100%;
+  background-color: #3182ce;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
