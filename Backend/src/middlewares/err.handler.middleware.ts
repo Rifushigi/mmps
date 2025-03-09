@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { nodeEnv } from "../config";
+import { env } from "../config";
 
 export class AppError extends Error {
     constructor(
@@ -66,20 +66,26 @@ export class AuthenticationError extends AppError {
     }
 }
 
+export const notFound = (_req: Request, res: Response, next: NextFunction): void => {
+    const error = new NotFoundError("Route not found");
+    res.status(404);
+    next(error);
+};
+
 export const globalErrorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
     if (err instanceof AppError) {
         return res.status(err.statusCode).json({
             status: false,
             message: err.message,
             ...(err.details != undefined && { details: err.details }),
-            ...(nodeEnv === 'development' && { stack: err.stack })
+            ...(env === 'development' && { stack: err.stack })
         });
     }
 
     return res.status(500).json({
         status: false,
         message: 'Internal Server Error',
-        ...(nodeEnv === "development" && { stack: err.stack })
+        ...(env === "development" && { stack: err.stack })
     });
 }
 
