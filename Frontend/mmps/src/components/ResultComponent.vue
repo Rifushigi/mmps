@@ -18,7 +18,7 @@
       <RouterLink
         @click="revertTimerState()"
         to="/"
-        class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition duration-200 mr-4"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 mr-4"
         >Go Back</RouterLink
       >
     </div>
@@ -36,33 +36,75 @@ const props = defineProps({
   yourAnswers: Array,
   duration: Number
 })
-// Function to format time taken (e.g., in minutes and seconds)
+
 function revertTimerState() {
   timeLeft.time = props.duration
   timeTaken.time = 0
 }
-// Function to format time taken
+
 function formatTimeTaken(seconds) {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes}m ${remainingSeconds}s`
 }
+
 const scorePercentage = computed(() =>
   Math.round((props.numberOfCorrectAnswers / props.quizQuestionLength) * 100)
 )
+
 const feedbackMessage = computed(() => {
   if (scorePercentage.value >= 80) return 'Excellent work!'
   if (scorePercentage.value >= 60) return 'Good job!'
   return 'You can do better, keep practicing!'
 })
+
 const feedbackColorClass = computed(() => {
   if (scorePercentage.value >= 80) return 'text-green-500'
   if (scorePercentage.value >= 60) return 'text-blue-500'
   return 'text-red-500'
 })
+
 const scoreColorClass = computed(() => {
   if (scorePercentage.value >= 80) return 'text-green-500'
   if (scorePercentage.value >= 60) return 'text-yellow-500'
   return 'text-red-500'
 })
 </script>
+
+<style scoped>
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-600 {
+  background-color: #2b6cb0;
+}
+
+.text-green-500 {
+  color: #48bb78;
+}
+
+.text-yellow-500 {
+  color: #ecc94b;
+}
+
+.text-red-500 {
+  color: #f56565;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
