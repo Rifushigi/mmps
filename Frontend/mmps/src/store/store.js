@@ -9,7 +9,7 @@ const store = createStore({
             user: null,
             isAdmin: null,
             token: null,
-            verified:false,
+            verified: false,
         }
     },
     mutations: {
@@ -35,21 +35,22 @@ const store = createStore({
         user(state) {
             return state.user
         },
-        token(state){
+        token(state) {
             return state.token
         },
-        isVerified(state){
+        isVerified(state) {
             return state.verified
         }
     },
     actions: {
         async login({ commit }, { email, password }) {
-            const user = await authService.login(email, password)
-            commit('setUser', user.user)
+            const { data } = await authService.login(email, password)
+            console.log("user:", data);
+            commit('setUser', data)
         },
         async signup({ commit }, { email, password, name }) {
-            const user = await authService.signup(email, password, name)
-            commit('setUser', user)
+            const { data } = await authService.signup(email, password, name)
+            commit('setUser', data)
         },
         logout({ commit }) {
             localStorage.clear()
