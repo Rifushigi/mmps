@@ -4,56 +4,26 @@ import { ApiResponse, IUser, RequestWithUser } from "../interfaces";
 import { asyncErrorHandler, NotFoundError, UnauthorisedError } from "../middlewares"
 
 class UserController {
-    //TODO
-    // public async createUser(req: Request, res: Response, next: NextFunction) {
-    //     try {
-    //         const { password, ...otherFields } = req.body;
-    //         const hashedPassword: string = hashPassword(password);
 
-    //         // Create a new user object with hashed password and other fields
-    //         const newUser: IUser = {
-    //             ...otherFields,
-    //             isAdmin: req.body.isAdmin || false, // Set isAdmin to false if not provided
-    //             hash: hashedPassword,
-    //         };
-
-    //         const user = await User.create(newUser);
-
-    //         res.status(201).json({
-    //             message: "User created successfully",
-    //             data: {
-    //                 user: user._id
-    //             },
-    //         });
-    //     } catch (error) {
-    //         // Pass any errors to the next middleware for centralized error handling
-    //         next(error);
-    //     }
-    // }
-
-    static getUserById = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+    static getUserById = asyncErrorHandler(async (req: Request, res: Response): Promise<any> => {
         const userId = req.params.id;
         const user = await User.findById(userId);
-
         if (!user) {
             throw new NotFoundError("User not found");
         }
-
         const sanitisedUser = {
             _id: user._id,
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin
         };
-
         const response: ApiResponse = {
             status: true,
             message: "Successfully retrieved user",
             data: sanitisedUser
         }
-
-        res.json(response);
-    })
+        return res.json(response);
+    });
 
     static getAllUsers = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
         const users = await User.find();
@@ -71,9 +41,8 @@ class UserController {
             message: "Successfully retrieved users",
             data: sanitisedUsers
         }
-        res.json(response);
+        return res.json(response);
     })
-
 
     static updateUser = asyncErrorHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
         const userId = req.params.id;
@@ -104,7 +73,7 @@ class UserController {
             message: "Successfully updated user",
             data: sanitisedUser
         }
-        res.json(response);
+        return res.json(response);
     });
 
     static deleteUser = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -117,7 +86,7 @@ class UserController {
             status: true,
             message: "Succesfully deleted user"
         }
-        res.json(response);
+        return res.json(response);
     });
 
     static getTotalUsers = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -130,8 +99,8 @@ class UserController {
             message: "Successfully fetched number of users",
             data: totalUsers
         }
-        res.json(response);
+        return res.json(response);
     });
 }
 
-export default UserControler;
+export default UserController;
