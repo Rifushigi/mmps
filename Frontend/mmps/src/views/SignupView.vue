@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="h-screen flex items-center justify-center bg-slate-800 overflow-y-auto transition-all"
-  >
+  <div class="h-screen flex items-center justify-center bg-gray-100 overflow-y-auto transition-all">
     <div
       class="bg-white bg-opacity-90 p-8 rounded shadow-md max-w-md w-full my-4 max-h-[90dvh] overflow-y-auto"
     >
@@ -33,7 +31,7 @@
               'opacity-40 cursor-not-allowed': faceCaptured,
               'animate-pulse opacity-100 cursor-not-allowed': capturing.state
             }"
-            class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+            class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
           >
             {{
               faceCaptured
@@ -51,7 +49,7 @@
               'opacity-40 cursor-not-allowed': !faceCaptured
             }"
             type="submit"
-            class="flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full"
+            class="flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full"
           >
             Sign Up
           </button>
@@ -59,7 +57,7 @@
       </form>
       <div class="text-center mt-4 sm:mt-2">
         <span class="text-sm text-gray-600">Already have an account? </span>
-        <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+        <router-link to="/login" class="font-medium text-blue-600 hover:text-blue-500">
           Login
         </router-link>
       </div>
@@ -79,7 +77,7 @@ import { ref, computed, reactive } from 'vue'
 import router from '@/router'
 import TextInput from '@/components/TextInput.vue'
 import PasswordInput from '@/components/PasswordInput.vue'
-import FacialRecognitionModal from '@/components/FacialRecoginitionModal.vue'
+import FacialRecognitionModal from '@/components/FacialRecognitionModal.vue'
 import { capturing, showCamera, cancelLoading } from '@/global_state/state'
 import { axiosInstance } from '@/axiosConfig'
 
@@ -153,8 +151,8 @@ const signupUser = async () => {
       faceDescriptors: signup.faceDescriptors
     })
 
-    if (response.data.success) {
-      router.push('/quizzes')
+    if (response.data.status) {
+      router.push('/')
     } else {
       errorMessage.value = response.data.message
     }
@@ -184,3 +182,45 @@ const signupUser = async () => {
   }
 }
 </script>
+
+<style scoped>
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.text-gray-900 {
+  color: #1a202c;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.text-red-500 {
+  color: #f56565;
+}
+
+.bg-blue-600 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.text-blue-600 {
+  color: #3182ce;
+}
+
+.text-blue-500 {
+  color: #4299e1;
+}
+
+.focus\:ring-blue-500:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
