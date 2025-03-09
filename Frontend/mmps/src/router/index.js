@@ -50,7 +50,7 @@ const router = createRouter({
           console.log(response)
           console.log(verified.value)
 
-          if (response.data.hasTaken || !verified.value) {
+          if (response.data.data.hasTaken || !verified.value) {
             console.log("got to not verifed")
             next('/'); // Redirect to the home page or another appropriate page
           } else {
