@@ -39,9 +39,37 @@ const selectOption = (id, isCorrect) => {
 </script>
 
 <style scoped>
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-900 {
+  color: #1a202c;
+}
+
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.bg-gray-200 {
+  background-color: #edf2f7;
+}
+
 .selected {
   background-color: #90cdf4; /* Example background color for selected option */
   border-color: #4299e1; /* Example border color for selected option */
   color: #2b6cb0; /* Example text color for selected option */
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
