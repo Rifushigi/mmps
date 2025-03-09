@@ -29,5 +29,27 @@ onMounted(() => (currentTabState.value = 'details'))
 </script>
 
 <style scoped>
-/* custom styles here */
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.text-blue-500 {
+  color: #3182ce;
+}
+
+.text-blue-700 {
+  color: #2b6cb0;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
 </style>
