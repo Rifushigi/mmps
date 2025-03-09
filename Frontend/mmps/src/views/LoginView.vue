@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-slate-800 overflow-y-auto">
+  <div class="min-h-screen flex items-center justify-center bg-gray-100 overflow-y-auto">
     <div class="bg-white bg-opacity-90 p-8 rounded shadow-md max-w-md w-full overflow-hidden">
       <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">Account Login</h2>
 
@@ -12,7 +12,7 @@
             type="email"
             autocomplete="on"
             required
-            class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
+            class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
           />
         </div>
 
@@ -25,7 +25,7 @@
               :type="passwordVisible ? 'text' : 'password'"
               autocomplete="on"
               required
-              class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-900"
+              class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-900"
             />
             <button
               @click="togglePasswordVisibility"
@@ -43,13 +43,13 @@
 
         <div class="flex items-center justify-between">
           <div class="text-sm">
-            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"
+            <a href="#" class="font-medium text-blue-600 hover:text-blue-500"
               >Forgot your password?</a
             >
           </div>
           <button
             type="submit"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Login
           </button>
@@ -58,7 +58,7 @@
 
       <div class="text-center mt-4">
         <span class="text-sm text-gray-600">Don't have an account? </span>
-        <router-link to="/signup" class="font-medium text-indigo-600 hover:text-indigo-500"
+        <router-link to="/signup" class="font-medium text-blue-600 hover:text-blue-500"
           >Sign Up</router-link
         >
       </div>
@@ -94,3 +94,53 @@ const loginUser = async () => {
   }
 }
 </script>
+
+<style scoped>
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-900 {
+  color: #1a202c;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.text-red-500 {
+  color: #f56565;
+}
+
+.bg-blue-600 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.text-blue-600 {
+  color: #3182ce;
+}
+
+.text-blue-500 {
+  color: #4299e1;
+}
+
+.focus\:ring-blue-500:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
