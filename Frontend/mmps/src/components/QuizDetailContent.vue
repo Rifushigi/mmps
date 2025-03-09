@@ -146,7 +146,7 @@ const quiz = ref({
 const fetchQuizData = async (id) => {
   try {
     const response = await axiosInstance.get(`/quiz/${id}`, { params: { uid } })
-    const { _id, ...rest } = response.data.quiz
+    const { _id, ...rest } = response.data.data.quiz
     quiz.value = { id: _id, ...rest }
   } catch (error) {
     console.error('Error fetching quiz data:', error)
@@ -198,16 +198,17 @@ const updateQuiz = async () => {
       // Make the API request to update the quiz
       const response = await axiosInstance.patch(`/quiz/${quizId.value}`, updatedQuiz)
 
-      console.log('Quiz updated:', response.data)
+      console.log('Quiz updated:', response.data.data)
       alert('Quiz updated successfully')
     } else {
       console.error('Some questions have invalid options')
       alert('Some questions have invalid options')
     }
   } catch (error) {
-    console.error('Error updating quiz:', error.response ? error.response.data : error.message)
+    console.error('Error updating quiz:', error.response ? error.response.data.data : error.message)
     alert(
-      'Failed to update quiz: ' + (error.response ? error.response.data.message : error.message)
+      'Failed to update quiz: ' +
+        (error.response ? error.response.data.data.message : error.message)
     )
   }
 }
@@ -215,7 +216,7 @@ const updateQuiz = async () => {
 const deleteQuiz = async () => {
   try {
     const response = await axiosInstance.delete(`/quiz/${quizId.value}`)
-    console.log('Quiz deleted:', response.data)
+    console.log('Quiz deleted:', response.data.data)
     alert('Quiz deleted successfully')
     router.push('/quizzes')
   } catch (error) {
@@ -230,14 +231,55 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.active-link {
-  background-color: #3b82f6;
-  color: white;
+.bg-white {
+  background-color: #ffffff;
 }
 
-.nav-link:hover {
-  cursor: pointer;
-  background-color: #4b5563;
-  color: white;
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.bg-green-500 {
+  background-color: #48bb78;
+}
+
+.bg-green-700 {
+  background-color: #2f855a;
+}
+
+.bg-red-500 {
+  background-color: #f56565;
+}
+
+.bg-red-700 {
+  background-color: #c53030;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
