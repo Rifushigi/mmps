@@ -176,5 +176,59 @@ const createQuiz = () => {
 </script>
 
 <style scoped>
-/* Additional styles if needed */
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.bg-gray-300 {
+  background-color: #e2e8f0;
+}
+
+.bg-gray-400 {
+  background-color: #cbd5e0;
+}
+
+.bg-blue-500 {
+  background-color: #3182ce;
+}
+
+.bg-blue-700 {
+  background-color: #2b6cb0;
+}
+
+.bg-green-500 {
+  background-color: #48bb78;
+}
+
+.bg-green-700 {
+  background-color: #2f855a;
+}
+
+.bg-red-500 {
+  background-color: #f56565;
+}
+
+.bg-red-700 {
+  background-color: #c53030;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.5);
+}
 </style>
