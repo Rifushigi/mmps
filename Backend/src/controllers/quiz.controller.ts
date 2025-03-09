@@ -1,105 +1,93 @@
-//Under development
 import { Request, Response, NextFunction } from "express";
 import { Quiz } from "../models";
 import { QuizResult } from "../models";
+import { asyncErrorHandler } from "../middlewares";
+import { ValidationError, NotFoundError } from "../middlewares/err.handler.middleware";
+import { ApiResponse } from "../interfaces";
 
-export class QuizController {
+class QuizController {
 
-    async createQuiz(req: Request, res: Response, next: NextFunction) {
-        try {
-            const quizData = req.body;
-
-            if (typeof quizData !== 'object' || Array.isArray(quizData)) {
-                return res.status(400).json({ message: "Invalid quiz data format. Expected an object." });
-            }
-
-            const newQuiz = await Quiz.create(quizData);
-            res.status(201).json({ message: "Quiz created successfully", quiz: newQuiz });
-        } catch (error) {
-            next(error);
+    static createQuiz = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const quizData = req.body;
+        if (typeof quizData !== 'object' || Array.isArray(quizData)) {
+            throw new ValidationError("Invalid quiz data format. Expected an object.");
         }
-    }
+        const newQuiz = await Quiz.create(quizData);
+        const response: ApiResponse = {
+            status: true,
+            message: "Quiz created successfully",
+            data: newQuiz
+        };
+        return res.status(201).json(response);
+    });
 
-    async getQuizById(req: Request, res: Response, next: NextFunction) {
-        try {
-            const quizId = req.params.id;
-            console.log(quizId)
-            const { userId } = req.query;
-            const quiz = await Quiz.findById(quizId);
-
-            if (!quiz) {
-                res.status(404).json({ message: "Quiz not found" });
-                return;
-            }
-
-            const hasTaken = await QuizResult.exists({ quizId: quizId, userId });
-
-            return res.status(200).json({
-                quiz,
-                hasTaken,
-            });
-        } catch (error) {
-            next(error);
+    static getQuizById = asyncErrorHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const quizId = req.params.id;
+        const { userId } = req.query;
+        const quiz = await Quiz.findById(quizId);
+        if (!quiz) {
+            throw new NotFoundError("Quiz not found");
         }
-    }
+        const hasTaken = await QuizResult.exists({ quizId: quizId, userId });
+        const response: ApiResponse = {
+            status: true,
+            message: "Quiz retrieved successfully",
+            data: { quiz, hasTaken }
+        };
+        return res.json(response);
+    });
 
-    async getAllQuizzes(req: Request, res: Response, next: NextFunction) {
-        try {
-            const quizzes = await Quiz.find();
-            res.status(200).json(quizzes);
-        } catch (error) {
-            next(error);
+    static getAllQuizzes = asyncErrorHandler(async (req: Request, res: Response) => {
+        const quizzes = await Quiz.find();
+        const response: ApiResponse = {
+            status: true,
+            message: "Quizzes retrieved successfully",
+            data: quizzes
+        };
+        return res.json(response);
+    });
+
+    static updateQuiz = asyncErrorHandler(async (req: Request, res: Response) => {
+        const quizId = req.params.id;
+        const updateData = req.body;
+        const updatedQuiz = await Quiz.findByIdAndUpdate(
+            quizId,
+            updateData,
+            { new: true }
+        );
+        if (!updatedQuiz) {
+            throw new NotFoundError("Quiz not found");
         }
-    }
+        const response: ApiResponse = {
+            status: true,
+            message: "Quiz updated successfully",
+            data: updatedQuiz
+        };
+        return res.json(response);
+    });
 
-    async updateQuiz(req: Request, res: Response, next: NextFunction) {
-        try {
-            const quizId = req.params.id;
-            const updateData = req.body;
-
-            // You can add validation here to ensure updateData is valid
-
-            const updatedQuiz = await Quiz.findByIdAndUpdate(
-                quizId,
-                updateData,
-                { new: true } // Return the updated document
-            );
-
-            if (!updatedQuiz) {
-                res.status(404).json({ message: "Quiz not found" });
-                return;
-            }
-
-            res.status(200).json({ message: "Quiz updated successfully", quiz: updatedQuiz });
-        } catch (error) {
-            next(error);
+    static deleteQuiz = asyncErrorHandler(async (req: Request, res: Response) => {
+        const quizId = req.params.id;
+        const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+        if (!deletedQuiz) {
+            throw new NotFoundError("Quiz not found");
         }
-    }
+        const response: ApiResponse = {
+            status: true,
+            message: "Quiz deleted successfully"
+        };
+        return res.json(response);
+    });
 
-    async deleteQuiz(req: Request, res: Response, next: NextFunction) {
-        try {
-            const quizId = req.params.id;
-            const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
-
-            if (!deletedQuiz) {
-                res.status(404).json({ message: "Quiz not found" });
-                return;
-            }
-
-            res.status(200).json({ message: "Quiz deleted successfully" });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    async getTotalQuizzes(req: Request, res: Response, next: NextFunction) {
-        try {
-            const totalQuizzes = await Quiz.countDocuments();
-            res.status(200).json({ totalQuizzes });
-        } catch (error) {
-            next(error);
-        }
-    }
-
-
+    static getTotalQuizzes = asyncErrorHandler(async (req: Request, res: Response) => {
+        const totalQuizzes = await Quiz.countDocuments();
+        const response: ApiResponse = {
+            status: true,
+            message: "Total quizzes count retrieved successfully",
+            data: { totalQuizzes }
+        };
+        return res.json(response);
+    });
 }
+
+export default QuizController;
