@@ -179,6 +179,7 @@ const updateQuiz = async () => {
       const updatedQuiz = {
         id: quiz.value.id,
         name: quiz.value.name,
+        duration: quiz.value.duration,
         dateCreated: quiz.value.dateCreated,
         questions: quiz.value.questions.map((question) => ({
           id: question.id,
@@ -191,6 +192,8 @@ const updateQuiz = async () => {
           }))
         }))
       }
+
+      console.log(quiz.value.duration)
 
       // Log the request payload for debugging
       console.log('Updating quiz with payload:', updatedQuiz)

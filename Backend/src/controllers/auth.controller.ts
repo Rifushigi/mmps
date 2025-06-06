@@ -200,7 +200,7 @@ class AuthController {
         //TODO
         // move the facematch threshold to config dir and find an optimal faceMatchThreshold
         // Define a face match threshold (can be adjusted as needed)
-        const faceMatchThreshold = 0.3;
+        const faceMatchThreshold = 0.4;
         // Create LabeledFaceDescriptors for the user
         const labeledFaceDescriptors = new faceapi.LabeledFaceDescriptors(
             user.email,
