@@ -4,6 +4,7 @@ import Joi from "joi";
 export const updateQuizSchema = Joi.object({
     id: Joi.number().required(),
     name: Joi.string().optional(),
+    duration: Joi.number().required(),
     dateCreated: Joi.date().iso().optional(), // Assuming dateCreated is a ISO-formatted date string
     questions: Joi.array().items(
         Joi.object({
