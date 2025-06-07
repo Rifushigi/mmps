@@ -7,6 +7,12 @@
       <div v-if="isLoading" class="flex items-center justify-center min-h-screen">Loading...</div>
       <div v-else-if="!showResults && !isLoading" class="w-[50%] flex items-center justify-center">
         <div class="grid grid-flow-col">
+          <FacialRecognitionModal
+            :show="showFacialRecognition"
+            :mode="'quiz'"
+            :quiz-id="quizId.value.toString()"
+            @close="showFacialRecognition = false"
+          />
           <Question
             :question="quiz.questions[currentQuestionIndex]"
             :selected-option="selectedOptions[currentQuestionIndex]"
@@ -48,8 +54,9 @@ import QuizHeader from '@/components/QuizHeader.vue'
 import Result from '@/components/ResultComponent.vue'
 import QuestionSidebar from '@/components/QuestionSidebar.vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
+import FacialRecognitionModal from '@/components/FacialRecognitionModal.vue'
 import { useRoute } from 'vue-router'
-import { timeLeft, timeTaken } from '@/global_state/state'
+import { timeLeft, timeTaken, verified } from '@/global_state/state'
 import { useStore } from 'vuex'
 import { axiosInstance } from '@/axiosConfig'
 
@@ -64,6 +71,8 @@ const userAnswers = reactive({})
 const answeredQuestions = reactive([])
 const numberOfCorrectAnswers = ref(0)
 let timerInterval = null
+let verificationInterval = null
+const showFacialRecognition = ref(false)
 const showConfirmationModal = ref(false)
 const isLoading = ref(true)
 const originalDuration = ref(0)
@@ -88,6 +97,46 @@ const fetchQuizzes = async () => {
     console.error('Error fetching quizzes:', error)
     isLoading.value = false
   }
+}
+
+const startVerificationChecks = () => {
+  // Calculate verification interval based on quiz duration
+  // We'll trigger verification checks every 1/4 to 1/3 of the quiz duration
+  const minInterval = Math.floor(originalDuration.value / 4)
+  const maxInterval = Math.floor(originalDuration.value / 3)
+  
+  // Start verification interval
+  verificationInterval = setInterval(() => {
+    // Only trigger verification if:
+    // 1. The quiz is still ongoing
+    // 2. There's still time left in the quiz
+    if (!showResults.value && timeLeft.time > 0) {
+      showFacialRecognition.value = true
+      // Reset the interval with a new random time between min and max
+      clearInterval(verificationInterval)
+      const nextInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval)
+      verificationInterval = setInterval(() => {
+        showFacialRecognition.value = true
+      }, nextInterval * 1000)
+    }
+  }, Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval) * 1000)
+
+  // Watch for verification state changes
+  watch(verified, (newVerified) => {
+    if (!newVerified.value && showResults.value === false) {
+      // If verification fails and quiz is still ongoing, end the quiz
+      showResults.value = true
+      // Show a message to the user
+      alert('Facial verification failed. Quiz has been ended.')
+    }
+  })
+
+  // Cleanup when component is unmounted
+  onBeforeUnmount(() => {
+    if (verificationInterval) {
+      clearInterval(verificationInterval)
+    }
+  })
 }
 
 onMounted(() => fetchQuizzes())
@@ -218,6 +267,10 @@ const restartQuiz = () => {
 
 watchEffect(() => {
   if (quiz.value && !showResults.value) {
+    // Start verification checks
+    if (!verificationInterval) {
+      startVerificationChecks()
+    }
     // Start the timer
     timerInterval = setInterval(() => {
       if (timeLeft.time > 0) {
