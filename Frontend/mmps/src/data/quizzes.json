@@ -2,6 +2,7 @@
   {
     "id": 1,
     "name": "Math",
+    "duration": 30,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
@@ -42,6 +43,7 @@
   {
     "id": 2,
     "name": "Biology",
+    "duration": 3,
     "dateCreated": "2024-01-01T00:00:00Z",
     "questions": [
       {
@@ -82,6 +84,7 @@
   {
     "id": 3,
     "name": "Chemistry",
+    "duration": 30,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
@@ -122,6 +125,7 @@
   {
     "id": 4,
     "name": "CSC 302",
+    "duration": 3,
     "dateCreated": "2023-04-01T00:00:00Z",
     "questions": [
       {
@@ -374,6 +378,7 @@
   {
     "id": 5,
     "name": "CSC 328",
+    "duration": 3,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
@@ -494,6 +499,7 @@
   {
     "id": 7,
     "name": "CSC 201",
+    "duration": 3,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
