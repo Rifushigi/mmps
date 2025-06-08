@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "Math",
-    "duration": 30,
+    "duration": 5,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
@@ -84,7 +84,7 @@
   {
     "id": 3,
     "name": "Chemistry",
-    "duration": 30,
+    "duration": 2,
     "dateCreated": "2023-01-01T00:00:00Z",
     "questions": [
       {
@@ -125,7 +125,7 @@
   {
     "id": 4,
     "name": "CSC 302",
-    "duration": 3,
+    "duration": 2,
     "dateCreated": "2023-04-01T00:00:00Z",
     "questions": [
       {
