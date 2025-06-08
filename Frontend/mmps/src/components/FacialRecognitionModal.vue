@@ -195,7 +195,7 @@ const captureAndVerifyFace = async () => {
         }
       }, 30000) // Increased timeout to 30 seconds
 
-      const maxCaptureRetries = 6
+      const maxCaptureRetries = 3
       const retryInterval = 850
       console.log('Starting face capture')
       const faceDescriptors = await captureFace(maxCaptureRetries, retryInterval)
