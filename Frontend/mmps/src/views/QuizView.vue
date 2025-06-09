@@ -7,12 +7,6 @@
       <div v-if="isLoading" class="flex items-center justify-center min-h-screen">Loading...</div>
       <div v-else-if="!showResults && !isLoading" class="w-[50%] flex items-center justify-center">
         <div class="grid grid-flow-col">
-          <FacialRecognitionModal
-            :show="showFacialRecognition"
-            :mode="'quiz'"
-            :quiz-id="quizId.value.toString()"
-            @close="showFacialRecognition = false"
-          />
           <Question
             :question="quiz.questions[currentQuestionIndex]"
             :selected-option="selectedOptions[currentQuestionIndex]"
@@ -38,8 +32,19 @@
         :duration="quiz.duration"
       />
     </div>
+    <!-- Facial Recognition Modal -->
+    <FacialRecognitionModal
+      :show="showFacialRecognition"
+      :mode="'quiz'"
+      :quiz-id="quizId.value ? quizId.value.toString() : ''"
+      @close="showFacialRecognition = false"
+      childStyle=""
+      class="!bg-opacity-0 h-full !inset-auto flex flex-col items-center justify-center"
+    />
+    <!-- <div class="fixed bottom-4 left-4 z-50 bg-white shadow-md rounded p-4 w-[300px]"> -->
   </div>
   <div v-else class="flex items-center justify-center min-h-screen">Quiz not found.</div>
+
   <ConfirmationModal
     v-if="showConfirmationModal"
     @confirm="submitQuiz"
@@ -48,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, watchEffect, onBeforeUnmount, onMounted } from 'vue'
+import { ref, computed, reactive, watchEffect, onBeforeUnmount, onMounted, watch } from 'vue'
 import Question from '@/components/QuestionComponent.vue'
 import QuizHeader from '@/components/QuizHeader.vue'
 import Result from '@/components/ResultComponent.vue'
@@ -99,47 +104,78 @@ const fetchQuizzes = async () => {
   }
 }
 
-const startVerificationChecks = () => {
-  // Calculate verification interval based on quiz duration
-  // We'll trigger verification checks every 1/4 to 1/3 of the quiz duration
+const verificationCheckpoints = ref([])
+const progressTriggered = ref(false)
+
+const scheduleNextVerification = () => {
   const minInterval = Math.floor(originalDuration.value / 4)
   const maxInterval = Math.floor(originalDuration.value / 3)
-  
-  // Start verification interval
-  verificationInterval = setInterval(() => {
-    // Only trigger verification if:
-    // 1. The quiz is still ongoing
-    // 2. There's still time left in the quiz
+  const delay = Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval) * 1000
+
+  verificationInterval = setTimeout(() => {
     if (!showResults.value && timeLeft.time > 0) {
       showFacialRecognition.value = true
-      // Reset the interval with a new random time between min and max
-      clearInterval(verificationInterval)
-      const nextInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval)
-      verificationInterval = setInterval(() => {
-        showFacialRecognition.value = true
-      }, nextInterval * 1000)
     }
-  }, Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval) * 1000)
+    scheduleNextVerification()
+  }, delay)
+}
 
-  // Watch for verification state changes
+const startVerificationChecks = () => {
+  if (!verificationInterval) {
+    scheduleNextVerification()
+  }
+
+  // Define answer-based checkpoints once quiz is loaded
+  watch(
+    () => quiz.value,
+    (newQuiz) => {
+      if (newQuiz) {
+        const total = newQuiz.questions.length
+        verificationCheckpoints.value = [0.25, 0.5, 0.75].map(p => Math.floor(total * p))
+      }
+    },
+    { immediate: true }
+  )
+
+  // Watch answered progress
+  watch(
+    () => answeredQuestions.length,
+    (newCount) => {
+      if (verificationCheckpoints.value.includes(newCount) && !progressTriggered.value) {
+        progressTriggered.value = true
+        showFacialRecognition.value = true
+        // reset after trigger
+        setTimeout(() => {
+          progressTriggered.value = false
+        }, 10000)
+      }
+    }
+  )
+
+  // Watch verified state
   watch(verified, (newVerified) => {
-    if (!newVerified.value && showResults.value === false) {
-      // If verification fails and quiz is still ongoing, end the quiz
-      showResults.value = true
-      // Show a message to the user
+    if (!newVerified.value && !showResults.value) {
       alert('Facial verification failed. Quiz has been ended.')
+      showResults.value = true
+    } else {
+      // Hide after delay to show "verified" message
+      setTimeout(() => {
+        showFacialRecognition.value = false
+      }, 2000)
     }
   })
 
-  // Cleanup when component is unmounted
   onBeforeUnmount(() => {
     if (verificationInterval) {
-      clearInterval(verificationInterval)
+      clearTimeout(verificationInterval)
     }
   })
 }
 
-onMounted(() => fetchQuizzes())
+onMounted(() =>{
+  fetchQuizzes()
+  showFacialRecognition.value = true // Show facial recognition modal on mount
+})
 
 const questionStatus = computed(
   () => `${currentQuestionIndex.value + 1}/${quiz.value.questions.length}`
@@ -267,26 +303,25 @@ const restartQuiz = () => {
 
 watchEffect(() => {
   if (quiz.value && !showResults.value) {
-    // Start verification checks
     if (!verificationInterval) {
       startVerificationChecks()
     }
-    // Start the timer
+
     timerInterval = setInterval(() => {
       if (timeLeft.time > 0) {
-        timeLeft.time-- // Decrement seconds
-        timeTaken.time++ // Increment time taken
+        timeLeft.time--
+        timeTaken.time++
       } else {
         clearInterval(timerInterval)
         showResults.value = true
         submitQuiz()
       }
-    }, 1000) // Update every second
+    }, 1000)
   } else {
-    // Stop the timer
     clearInterval(timerInterval)
   }
 })
+
 
 onBeforeUnmount(() => {
   clearInterval(timerInterval)
