@@ -16,7 +16,7 @@
     </div>
     <div class="my-8 flex justify-center mr-4">
       <RouterLink
-        @click="revertTimerState()"
+        @click="handleGoBack"
         to="/"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200 mr-4"
         >Go Back</RouterLink
@@ -26,8 +26,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { timeLeft, timeTaken } from '@/global_state/state'
+import { computed} from 'vue'
+import { timeLeft, timeTaken } from '../global_state/state'
+import router from '@/router'
+
+function handleGoBack() {
+  timeLeft.time = props.duration
+  timeTaken.time = 0
+  router.push('/')
+}
 
 const props = defineProps({
   numberOfCorrectAnswers: Number,
@@ -36,11 +43,6 @@ const props = defineProps({
   yourAnswers: Array,
   duration: Number
 })
-
-function revertTimerState() {
-  timeLeft.time = props.duration
-  timeTaken.time = 0
-}
 
 function formatTimeTaken(seconds) {
   const minutes = Math.floor(seconds / 60)
