@@ -5,7 +5,7 @@
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
     <div :class="`${childStyle} bg-white w-[400px] rounded-lg p-8 shadow-md relative`">
-      <h2 class="text-2xl font-semibold mb-4 text-gray-700">Facial Recognition</h2>
+      <h2 v-if="!showCloseButton" class="text-2xl font-semibold mb-4 text-gray-700">Facial Recognition</h2>
 
       <div
         class="relative w-[300px] mx-auto rounded-md border-[3px] border-indigo-500 shadow-md h-[227px] flex items-center justify-center"
@@ -36,7 +36,7 @@
         {{ errorMessage }}
       </p>
 
-      <div class="flex justify-center gap-4 mt-4">
+      <div v-if="!showCloseButton" class="flex justify-center gap-4 mt-4">
         <button
           @click="closeModal"
           class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
@@ -60,6 +60,10 @@ const user = computed(() => store.getters.user)
 
 const props = defineProps({
   show: Boolean,
+  showCloseButton: {
+    type: Boolean,
+    default: true
+  },
   mode: {
     type: String,
     required: true,

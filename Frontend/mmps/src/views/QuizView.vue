@@ -38,8 +38,9 @@
       :mode="'quiz'"
       :quiz-id="quizId.value ? quizId.value.toString() : ''"
       @close="showFacialRecognition = false"
-      childStyle=""
+      childStyle="h-90"
       class="!bg-opacity-0 h-full !inset-auto flex flex-col items-center justify-center my-12 px-4"
+      :showCloseButton=true
     />
     <!-- <div class="fixed bottom-4 left-4 z-50 bg-white shadow-md rounded p-4 w-[300px]"> -->
   </div>
@@ -114,6 +115,7 @@ const scheduleNextVerification = () => {
 
   verificationInterval = setTimeout(() => {
     if (!showResults.value && timeLeft.time > 0) {
+      
       showFacialRecognition.value = true
     }
     scheduleNextVerification()
