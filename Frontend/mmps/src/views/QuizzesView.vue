@@ -16,6 +16,8 @@
         :quizId="quizId"
         @verified="handleFaceVerified"
         @close="closeModal"
+        :showCloseButton=false
+        @notCaptured="closeModal"
       />
       <p v-if="quizData.length === 0" class="text-gray-600 mt-4">
         No quizzes found in this category.
