@@ -1,9 +1,10 @@
 <template>
   <div
+    v-bind="$attrs"
     v-if="show"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    class="fixed flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="bg-white w-[400px] rounded-lg p-8 shadow-md relative">
+    <div :class="`${childStyle} bg-white w-[400px] rounded-lg p-8 shadow-md relative`">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700">Facial Recognition</h2>
 
       <div
@@ -67,7 +68,8 @@ const props = defineProps({
   quizId: {
     type: String,
     required: false
-  }
+  },
+  childStyle: {type: String}
 })
 const emit = defineEmits(['close', 'verified', 'notCaptured', 'faceDescriptor'])
 
@@ -117,7 +119,6 @@ const stopVideo = () => {
     const tracks = stream.getTracks()
     tracks.forEach((track) => {
       track.stop()
-      stream.removeTrack(track)
     })
     video.value.srcObject = null
   }
