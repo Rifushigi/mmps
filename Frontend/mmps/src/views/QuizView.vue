@@ -37,10 +37,13 @@
       :show="showFacialRecognition"
       :mode="'quiz'"
       :quiz-id="quizId.value ? quizId.value.toString() : ''"
-      @close="showFacialRecognition = false"
+      @not-verified="handleVerificationFailed"
+      @close="handleModalClose"
+      @verified="handleVerificationSuccess"
+      @not-captured="handleVerificationFailed"
       childStyle="h-90"
       class="!bg-opacity-0 h-full !inset-auto flex flex-col items-center justify-center my-12 px-4"
-      :showCloseButton=true
+      :showCloseButton="true"
     />
     <!-- <div class="fixed bottom-4 left-4 z-50 bg-white shadow-md rounded p-4 w-[300px]"> -->
   </div>
@@ -54,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, watchEffect, onBeforeUnmount, onMounted, watch } from 'vue'
+import { ref, computed, reactive, onBeforeUnmount, onMounted, watch } from 'vue'
 import Question from '@/components/QuestionComponent.vue'
 import QuizHeader from '@/components/QuizHeader.vue'
 import Result from '@/components/ResultComponent.vue'
@@ -62,10 +65,13 @@ import QuestionSidebar from '@/components/QuestionSidebar.vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 import FacialRecognitionModal from '@/components/FacialRecognitionModal.vue'
 import { useRoute } from 'vue-router'
-import { timeLeft, timeTaken, verified } from '@/global_state/state'
+import { showCamera, timeLeft, timeTaken, capturing } from '@/global_state/state'
 import { useStore } from 'vuex'
 import { axiosInstance } from '@/axiosConfig'
+import router from '@/router'
 
+const timerInitialized = ref(false)
+const verified = ref(false)
 const quizes = ref([])
 const route = useRoute()
 const store = useStore()
@@ -76,13 +82,43 @@ const currentQuestionIndex = ref(0)
 const userAnswers = reactive({})
 const answeredQuestions = reactive([])
 const numberOfCorrectAnswers = ref(0)
-let timerInterval = null
 let verificationInterval = null
 const showFacialRecognition = ref(false)
 const showConfirmationModal = ref(false)
 const isLoading = ref(true)
 const originalDuration = ref(0)
 const selectedOptions = reactive([])
+const isVerifyingNow = ref(false)
+
+
+const closeModal = () => {
+  showFacialRecognition.value = false
+  capturing.state = false
+  showCamera.state = false
+}
+
+const handleVerificationFailed = async () => {
+  console.log('Verification failed, submitting quiz...')
+  await closeModal()
+  await submitQuiz()
+
+  if (timerIntervalValue.value) {
+    clearInterval(timerIntervalValue.value)
+  }
+
+  // ✅ Force route navigation
+  router.push('/')
+}
+
+const handleVerificationSuccess = () => {
+  console.log('Verification successful')
+  closeModal()
+}
+
+const handleModalClose = () => {
+  console.log('Modal closed')
+  closeModal()
+}
 
 const fetchQuizzes = async () => {
   try {
@@ -92,6 +128,7 @@ const fetchQuizzes = async () => {
     if (quiz.value) {
       originalDuration.value = quiz.value.duration * 60
       timeLeft.time = quiz.value.duration * 60 // Set initial time
+       localStorage.setItem('quizTimeLeft', timeLeft.time.toString())
       selectedOptions.splice(
         0,
         selectedOptions.length,
@@ -105,18 +142,25 @@ const fetchQuizzes = async () => {
   }
 }
 
+watch(timeLeft, (newValue) => {
+  localStorage.setItem('quizTimeLeft', newValue.toString())
+}, { deep: true })
+
 const verificationCheckpoints = ref([])
 const progressTriggered = ref(false)
 
 const scheduleNextVerification = () => {
+  if (showResults.value || timeLeft.time <= 0) return;
+
   const minInterval = Math.floor(originalDuration.value / 4)
   const maxInterval = Math.floor(originalDuration.value / 3)
   const delay = Math.floor(Math.random() * (maxInterval - minInterval + 1) + minInterval) * 1000
 
   verificationInterval = setTimeout(() => {
     if (!showResults.value && timeLeft.time > 0) {
-      
+      isVerifyingNow.value = true
       showFacialRecognition.value = true
+      showCamera.state = true
     }
     scheduleNextVerification()
   }, delay)
@@ -144,7 +188,10 @@ const startVerificationChecks = () => {
     () => answeredQuestions.length,
     (newCount) => {
       if (verificationCheckpoints.value.includes(newCount) && !progressTriggered.value) {
+        isVerifyingNow.value = true
+        verified.value = false
         progressTriggered.value = true
+        showCamera.state = true
         showFacialRecognition.value = true
         // reset after trigger
         setTimeout(() => {
@@ -154,30 +201,27 @@ const startVerificationChecks = () => {
     }
   )
 
+  console.log("verified value before watch  ", verified.value)
   // Watch verified state
-  watch(verified, (newVerified) => {
-    if (!newVerified.value && !showResults.value) {
-      alert('Facial verification failed. Quiz has been ended.')
-      showResults.value = true
-    } else {
-      // Hide after delay to show "verified" message
-      setTimeout(() => {
-        showFacialRecognition.value = false
-      }, 2000)
-    }
-  })
 
-  onBeforeUnmount(() => {
-    if (verificationInterval) {
-      clearTimeout(verificationInterval)
+watch(verified, (newVerified) => {
+  if (!isVerifyingNow.value) return
+  
+  if (!newVerified) {
+    closeModal()
+    submitQuiz()
+    // Only show alert if we're in quiz mode
+    if (!showResults.value) {
+      alert('Facial verification failed. Quiz has been submitted.')
     }
-  })
+  } else {
+    closeModal()
+  }
+
+  isVerifyingNow.value = false
+})
 }
 
-onMounted(() =>{
-  fetchQuizzes()
-  showFacialRecognition.value = true // Show facial recognition modal on mount
-})
 
 const questionStatus = computed(
   () => `${currentQuestionIndex.value + 1}/${quiz.value.questions.length}`
@@ -246,7 +290,7 @@ const onOptionSelected = ({ optionId }) => {
 
 const submitQuiz = async () => {
   showResults.value = true
-  clearInterval(timerInterval)
+  clearInterval(timerInterval.value)
   showConfirmationModal.value = false
 
   // Initialize variables to store results
@@ -303,31 +347,59 @@ const restartQuiz = () => {
   )
 }
 
-watchEffect(() => {
-  if (quiz.value && !showResults.value) {
-    if (!verificationInterval) {
-      startVerificationChecks()
-    }
+const timerIntervalValue = { value: null }
 
-    timerInterval = setInterval(() => {
-      if (timeLeft.time > 0) {
+const timerInterval = setInterval(() => {
+    if (timeLeft.time > 0) {
         timeLeft.time--
         timeTaken.time++
-      } else {
-        clearInterval(timerInterval)
-        showResults.value = true
-        submitQuiz()
-      }
-    }, 1000)
+        console.log(`Time left: ${timeLeft.time}`)
+    } else {
+        clearInterval(timerIntervalValue.value)
+        timerIntervalValue.value = null
+    }
+}, 1000)
+
+onMounted(async () => {
+  const savedTime = localStorage.getItem('quizTimeLeft')
+  if (savedTime) {
+    timeLeft.time = parseInt(savedTime)
+  }
+
+  await fetchQuizzes()
+
+  // Start verification checkpoints
+  startVerificationChecks()
+
+  if (!timerInterval && quiz.value && !showResults.value) {
+    console.log('Initializing timer once.')
+    timerInitialized.value = true
+
+console.log('Attempting to initialize timer...')
+console.log('timerInitialized:', timerInitialized.value)
+console.log('quiz.value:', quiz.value)
+console.log('showResults:', showResults.value)
+console.log('timerInterval:', timerInterval)
   } else {
-    clearInterval(timerInterval)
+    console.log('Timer already initialized:', timerInterval)
   }
 })
 
 
+
+
 onBeforeUnmount(() => {
-  clearInterval(timerInterval)
+  if (timerInterval) {
+    clearInterval(timerInterval)
+  }
+  if (verificationInterval) {
+    clearTimeout(verificationInterval)
+  }
+  showCamera.state = false
+  capturing.state = false
+  localStorage.removeItem('quizTimeLeft')
 })
+
 </script>
 
 <style scoped>
