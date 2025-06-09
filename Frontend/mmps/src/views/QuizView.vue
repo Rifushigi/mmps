@@ -39,7 +39,7 @@
       :quiz-id="quizId.value ? quizId.value.toString() : ''"
       @close="showFacialRecognition = false"
       childStyle=""
-      class="!bg-opacity-0 h-full !inset-auto flex flex-col items-center justify-center"
+      class="!bg-opacity-0 h-full !inset-auto flex flex-col items-center justify-center my-12 px-4"
     />
     <!-- <div class="fixed bottom-4 left-4 z-50 bg-white shadow-md rounded p-4 w-[300px]"> -->
   </div>
