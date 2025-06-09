@@ -75,7 +75,11 @@ const props = defineProps({
   },
   childStyle: {type: String}
 })
-const emit = defineEmits(['close', 'verified', 'notCaptured', 'faceDescriptor'])
+const emit = defineEmits(['close', 'verified', 'notCaptured', 'faceDescriptor', 'notVerified'])
+
+const handleVerificationFailure = () => {
+  emit('notCaptured')
+}
 
 const faceVerified = ref(false)
 const video = ref(null)
@@ -198,7 +202,7 @@ const captureAndVerifyFace = async () => {
           console.log('Face capture timeout')
           throw new Error('Face capture timeout')
         }
-      }, 30000) // Increased timeout to 30 seconds
+      }, 10000) // Increased timeout to 30 seconds
 
       const maxCaptureRetries = 3
       const retryInterval = 850
@@ -221,7 +225,7 @@ const captureAndVerifyFace = async () => {
         faceCaptured.value = true
         faceVerified.value = true
         emit('faceDescriptor', avgDescriptor)
-        emit('verified')
+        emit('verified', true)
         break
       } else if (props.mode === 'quiz') {
         console.log('Quiz mode: Validating face')
@@ -233,14 +237,18 @@ const captureAndVerifyFace = async () => {
           verified.value = true
           faceCaptured.value = true
           faceVerified.value = true
-          emit('verified')
+          emit('verified', true)
           break
         } else if (response.status === 401) {
           console.log('Authentication failed')
           errorMessage.value = 'Authentication failed. Please try again or contact support.'
+          emit('notVerified')
+          setTimeout(() => handleVerificationFailure(), 2000)
         } else {
           console.log('Face verification failed')
           errorMessage.value = 'Face verification failed. Please try again.'
+          emit('notVerified')
+          setTimeout(() => handleVerificationFailure(), 2000)
         }
       }
     } catch (error) {
@@ -249,6 +257,7 @@ const captureAndVerifyFace = async () => {
       if (retryCount >= maxRetries) {
         errorMessage.value =
           'Face verification failed after multiple attempts. Please try again later.'
+          setTimeout(() => handleVerificationFailure(), 2000)
       } else {
         await new Promise((resolve) => setTimeout(resolve, 2000)) // Wait 2 seconds before retrying
       }
